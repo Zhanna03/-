@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ММИЛ — Березин әдістемесі</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F0FA;--bg2:#EAE4F5;--surface:#FFFFFF;--border:#D8CFEE;--text:#2A1F4E;--muted:#7B6FA0;--accent:#7C4DFF;--accent-light:#EDE7FF;--r:16px;--r-sm:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-weight:400;min-height:100vh;line-height:1.6}
+.shell{max-width:680px;margin:0 auto;padding:0 1rem 5rem}
+header{background:linear-gradient(135deg,#7C4DFF 0%,#B39DDB 100%);border-radius:0 0 24px 24px;padding:1.25rem 1.5rem 1rem;margin:0 -1rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.logo{font-size:1.1rem;font-weight:700;color:#fff}
+.logo span{font-weight:300;opacity:.85}
+.header-meta{font-size:.75rem;color:rgba(255,255,255,.8);text-align:right}
+.prog-wrap{margin-bottom:1.5rem}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.prog-label{font-size:.78rem;color:var(--muted);font-weight:600}
+.prog-track{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#7C4DFF,#B39DDB);border-radius:99px;transition:width .4s ease}
+.card{background:var(--surface);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 16px rgba(124,77,255,.07)}
+.intro-icon{width:56px;height:56px;background:var(--accent-light);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;margin-bottom:1rem}
+.intro-title{font-size:1.4rem;font-weight:700;line-height:1.3;margin-bottom:.75rem}
+.intro-body{font-size:.88rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem}
+.stats-row{display:flex;gap:.75rem;margin-bottom:1.75rem}
+.stat{flex:1;background:var(--accent-light);border-radius:var(--r-sm);padding:.875rem .5rem;text-align:center}
+.stat-num{font-size:1.5rem;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:.7rem;color:var(--muted);font-weight:600;margin-top:.1rem}
+.form-title{font-size:1rem;font-weight:700;margin-bottom:1.25rem;color:var(--text)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.5rem}
+.form-full{grid-column:1/-1}
+.field label{display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.35rem;letter-spacing:.03em;text-transform:uppercase}
+.field input,.field select{width:100%;padding:.7rem .875rem;border:2px solid var(--border);border-radius:var(--r-sm);background:var(--bg);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:500;color:var(--text);outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.field input::placeholder{color:#C5B8E0}
+.field.required label::after{content:' *';color:#C62828}
+.field input.err,.field select.err{border-color:#E53935;background:#FFF5F5}
+.err-msg{font-size:.75rem;color:#C62828;font-weight:600;margin-top:.25rem;display:none}
+.err-msg.show{display:block}
+.form-error{background:#FFEBEE;border:1.5px solid #FFCDD2;border-radius:var(--r-sm);padding:.7rem 1rem;font-size:.82rem;color:#C62828;font-weight:600;margin-bottom:1rem;display:none}
+.form-error.show{display:block}
+.btn-start{width:100%;padding:1rem;border:none;border-radius:var(--r);background:linear-gradient(135deg,#7C4DFF 0%,#9C72FF 100%);color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .1s;box-shadow:0 4px 16px rgba(124,77,255,.35);letter-spacing:.02em}
+.btn-start:active{transform:scale(.98)}
+.patient-bar{background:var(--accent-light);border-radius:var(--r-sm);padding:.75rem 1rem;margin-bottom:1.25rem;display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center}
+.patient-chip{font-size:.78rem;font-weight:600;color:var(--muted)}
+.patient-chip strong{color:var(--accent);font-weight:700}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.q-num{display:inline-flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent);font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:99px}
+.q-skip-badge{display:none;background:#FFF3E0;color:#E65100;font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:99px}
+.q-text{font-size:1.1rem;font-weight:500;line-height:1.65;color:var(--text);margin-bottom:1.75rem;min-height:3rem}
+.btn-row{display:flex;gap:.75rem;margin-bottom:1.25rem}
+.btn-ans{flex:1;padding:.875rem .5rem;border:2px solid var(--border);border-radius:var(--r);background:var(--surface);cursor:pointer;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-ans:active{transform:scale(.97)}
+.btn-ans.sel-v{background:var(--accent-light);border-color:var(--accent);color:var(--accent);box-shadow:0 2px 12px rgba(124,77,255,.2)}
+.btn-ans.sel-n{background:#FFF3E0;border-color:#FF8A65;color:#E64A19;box-shadow:0 2px 12px rgba(255,138,101,.2)}
+.nav-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+.btn-nav{padding:.65rem .5rem;border:2px solid var(--border);border-radius:var(--r-sm);background:transparent;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:600;color:var(--muted);transition:all .12s;text-align:center}
+.btn-nav:disabled{opacity:.3;cursor:default}
+.btn-nav-primary{background:linear-gradient(135deg,#7C4DFF,#9C72FF);border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(124,77,255,.3)}
+.skip-note{font-size:.72rem;color:var(--muted);text-align:center;margin-top:.75rem}
+.tabs{display:flex;background:var(--surface);border-radius:var(--r);padding:4px;gap:4px;margin-bottom:1.25rem;box-shadow:0 2px 12px rgba(124,77,255,.07)}
+.tab-btn{flex:1;padding:.6rem .25rem;border:none;border-radius:12px;background:transparent;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:600;color:var(--muted);transition:all .15s}
+.tab-btn.active{background:var(--accent-light);color:var(--accent)}
+.section-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.875rem;margin-top:1.25rem}
+.section-label:first-child{margin-top:0}
+.scale-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.scale-name{font-size:.75rem;font-weight:600;color:var(--muted);width:160px;flex-shrink:0}
+.bar-bg{flex:1;height:10px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.scale-t{font-size:.78rem;font-weight:700;width:28px;text-align:right;flex-shrink:0}
+.print-header{display:none;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--border)}
+.print-header h2{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.print-meta{font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.25rem .75rem}
+.interp-item{background:var(--bg);border-radius:var(--r-sm);padding:.875rem 1rem;margin-bottom:.5rem;display:flex;gap:.75rem;align-items:flex-start}
+.interp-t{font-size:1.1rem;font-weight:700;min-width:38px;text-align:center;padding-top:1px}
+.interp-body .iname{font-size:.85rem;font-weight:700;margin-bottom:.2rem}
+.interp-body .idesc{font-size:.78rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:.65rem;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:.4rem;vertical-align:middle}
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:5px}
+.ans-cell{background:var(--bg2);border-radius:8px;padding:5px 2px;text-align:center;cursor:pointer;transition:transform .1s;border:2px solid transparent}
+.ans-cell:active{transform:scale(.94)}
+.ans-cell .cnum{font-size:.6rem;font-weight:600;color:var(--muted)}
+.ans-cell .cval{font-size:.78rem;font-weight:700}
+.ans-cell.av{background:var(--accent-light);border-color:#B39DDB}
+.ans-cell.av .cval{color:var(--accent)}
+.ans-cell.an{background:#FFF3E0;border-color:#FFCC80}
+.ans-cell.an .cval{color:#E64A19}
+.ans-cell.ask .cval{color:#C5B8E0}
+.action-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem}
+.btn-action{padding:.65rem 1.25rem;border:2px solid var(--border);border-radius:var(--r-sm);background:transparent;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:600;color:var(--muted);transition:all .12s}
+.btn-action.danger{color:#C62828;border-color:#FFCDD2}
+.btn-action.primary{background:linear-gradient(135deg,#7C4DFF,#9C72FF);border-color:transparent;color:#fff}
+.note-box{background:var(--accent-light);border-radius:var(--r-sm);padding:.875rem 1rem;font-size:.8rem;color:var(--muted);line-height:1.65;margin-top:1.25rem}
+.note-box strong{color:var(--text);font-weight:700}
+#view-intro,#view-test,#view-results{display:none}
+#view-intro.active,#view-test.active,#view-results.active{display:block}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}.form-full{grid-column:1}.scale-name{width:120px;font-size:.68rem}.q-text{font-size:1rem}.card{padding:1.25rem}.nav-row{grid-template-columns:1fr 1fr}.btn-nav-primary{grid-column:1/-1}}
+@media print{body{background:#fff}.no-print{display:none!important}.print-header{display:block!important}header{background:#7C4DFF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.patient-bar{background:#EDE7FF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div class="logo">ММИЛ <span>/ Березин</span></div>
+    <div class="header-meta" id="hdr-meta">370 пікір · 13 шкала</div>
+  </header>
+
+  <!-- КІРІСПЕ -->
+  <div id="view-intro">
+    <div class="card">
+      <div class="intro-icon">🧠</div>
+      <div class="intro-title">Тұлғаны жан-жақты зерттеу әдістемесі</div>
+      <div class="intro-body">MMPI-дің бейімделген нұсқасы (Ф.Б. Березин). Әр пікірді өзіңізге қатысты <strong>«Иә»</strong> немесе <strong>«Жоқ»</strong> деп бағалаңыз. Ұзақ ойланбай, тез жауап беруге тырысыңыз.</div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-num">370</div><div class="stat-lbl">сұрақ</div></div>
+        <div class="stat"><div class="stat-num">13</div><div class="stat-lbl">шкала</div></div>
+        <div class="stat"><div class="stat-num">≈45</div><div class="stat-lbl">минут</div></div>
+      </div>
+      <div class="form-title">Тексеру деректері</div>
+      <div class="form-error" id="form-error">Барлық міндетті өрістерді толтырыңыз (*)</div>
+      <div class="form-grid">
+        <div class="field form-full required">
+          <label>Науқастың аты-жөні</label>
+          <input type="text" id="f-name" placeholder="Иванов Иван Иванович" autocomplete="off">
+          <div class="err-msg" id="err-name">Науқастың аты-жөнін енгізіңіз</div>
+        </div>
+        <div class="field required">
+          <label>Туған күні</label>
+          <input type="date" id="f-dob">
+          <div class="err-msg" id="err-dob">Туған күнін көрсетіңіз</div>
+        </div>
+        <div class="field required">
+          <label>Жынысы</label>
+          <select id="f-sex">
+            <option value="">— таңдаңыз —</option>
+            <option value="Ер">Еркек</option>
+            <option value="Әй">Әйел</option>
+          </select>
+          <div class="err-msg" id="err-sex">Жынысын көрсетіңіз</div>
+        </div>
+        <div class="field required">
+          <label>Тексеру күні</label>
+          <input type="date" id="f-date">
+          <div class="err-msg" id="err-date">Тексеру күнін көрсетіңіз</div>
+        </div>
+        <div class="field required">
+          <label>Психолог</label>
+          <input type="text" id="f-psych" placeholder="Тегі А.Ж." autocomplete="off">
+          <div class="err-msg" id="err-psych">Психологтың атын енгізіңіз</div>
+        </div>
+        <div class="field">
+          <label>Науқастың телефоны</label>
+          <input type="tel" id="f-phone" placeholder="+7 (___) ___-__-__" autocomplete="off">
+        </div>
+      </div>
+      <button class="btn-start" onclick="startTest()">Тестті бастау →</button>
+    </div>
+  </div>
+
+  <!-- ТЕСТ -->
+  <div id="view-test">
+    <div id="patient-bar-test" class="patient-bar" style="display:none"></div>
+    <div class="prog-wrap">
+      <div class="prog-row">
+        <span class="prog-label" id="prog-lbl">1-сұрақ / 370</span>
+        <span class="prog-label" id="prog-pct" style="color:var(--accent)">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="q-meta">
+        <span class="q-num" id="q-num">#1</span>
+        <span class="q-skip-badge" id="q-skip-badge">өткізілді</span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="btn-row">
+        <button class="btn-ans" id="btn-v" onclick="answer(true)">✓ Иә</button>
+        <button class="btn-ans" id="btn-n" onclick="answer(false)">✗ Жоқ</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btn-back" onclick="navQ(-1)">← Артқа</button>
+        <button class="btn-nav" onclick="navQ(1)">Алға →</button>
+        <button class="btn-nav btn-nav-primary" onclick="showResults()">Нәтиже</button>
+      </div>
+      <div class="skip-note">Өткізілген сұрақтарға кейін оралуға болады</div>
+    </div>
+  </div>
+
+  <!-- НӘТИЖЕЛЕР -->
+  <div id="view-results">
+    <div class="print-header">
+      <h2>ММИЛ — Тұлғаны жан-жақты зерттеу әдістемесі (Березин)</h2>
+      <div class="print-meta" id="print-meta"></div>
+    </div>
+    <div id="patient-bar-res" class="patient-bar no-print" style="display:none"></div>
+    <div class="tabs no-print">
+      <button class="tab-btn active" onclick="switchTab('profile',this)">Профиль</button>
+      <button class="tab-btn" onclick="switchTab('interp',this)">Шкалалар</button>
+      <button class="tab-btn" onclick="switchTab('answers',this)">Жауаптар</button>
+    </div>
+
+    <div id="tab-profile">
+      <div class="card">
+        <div class="section-label">Сенімділік шкалалары</div>
+        <div id="bars-validity"></div>
+        <div class="section-label">Клиникалық шкалалар (Т-баллдар)</div>
+        <div id="bars-clinical"></div>
+        <div class="note-box">
+          <strong>Түсіндіру нормасы:</strong> T &lt; 40 — төмен · T 40–60 — норма · T 60–69 — орташа жоғары · T ≥ 70 — клиникалық маңызды
+        </div>
+        <div class="action-row">
+          <button class="btn-action primary no-print" onclick="window.print()">🖨 Басып шығару</button>
+          <button class="btn-action no-print" onclick="goBack()">← Тестке оралу</button>
+          <button class="btn-action danger no-print" onclick="resetTest()" style="margin-left:auto">Жаңа тест</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-interp" style="display:none">
+      <div class="card">
+        <div id="interp-list"></div>
+        <div class="action-row">
+          <button class="btn-action no-print" onclick="goBack()">← Тестке оралу</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-answers" style="display:none">
+      <div class="card">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:1rem;font-weight:600">Сұраққа өту үшін нөмірді басыңыз</div>
+        <div class="ans-grid" id="ans-grid"></div>
+        <div class="action-row">
+          <button class="btn-action no-print" onclick="goBack()">← Тестке оралу</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ITEMS=["Менің тәбетім жақсы.","Таңертең мен өзімді сергек және демалған сезінемін.","Менің күнделікті өмірімде қызықты нәрселер көп.","Мен өте шиеленіскен жұмыс істеймін.","Кейде маған мойындауға батылым жетпейтін ойлар келеді.","Менің асқазаным жақсы жұмыс істейді деп ойлаймын.","Мен медицина тақырыбындағы газет мақалаларын оқығанды ұнатамын.","Менің қол-аяғым әрқашан жылы болады.","Менің күнделікті өмірім қызықты іс-шаралармен толы.","Мен спорт жарыстарын қуана қарамын.","Мен жыныстық мәселелер жөнінде алаңдаймын.","Ойланбай айтқан немесе жасаған нәрселерімнен жиі қиындыққа тап боламын.","Таныс адамдарымның көпшілігімен салыстырғанда менің кемшіліктерім аз.","Кейде өзімді айналысып жүрген нәрселерімнен бас тартуым керек деп ойлаймын.","Кейде үйімді тастап кетуді ойлаймын.","Мен жиі жаман нәрселер туралы ойлаймын.","Мен өзіме сенімдімін.","Зерігіп қалсам, қызық нәрсе іздеймін.","Мені оңай ренжітуге болады.","Мен гүлдерді жақсы көремін.","Маған түс іс жүзінде ешқашан түспейді.","Мен ішек жағдайым туралы алаңдаймын.","Кейде бейтаныс немесе алыс таныстар маған күтпеген жерден бірнәрсе береді немесе жібереді.","Сенің басыңа не келетінін ешкім ойламайды.","Мен осындай ұялшақ болмасам екен деп тілеймін.","Менің асқазаным жиі ауырады.","Маған қиыншылық туғызған нәрселерде кінәм жоқ.","Біреу мені ренжіткенде, мен кек алуды табамын.","Адамдардың көпшілігі алға жылжу үшін өтірік айтады деп ойлаймын.","Кейде лас анекдоттардан күлемін.","Адамдардың көпшілігі жанашырлық туғызу үшін қиыншылықтарын асыра сипаттайды деп ойлаймын.","Күндердің көп бөлігінде жұмысқа ықыласпен барамын.","Мен нашар ұйықтаймын.","Мен дерлік әр түні түс көремін.","Мені басқаратын адамдар, әдетте, нені ұғатынын біледі.","Мен сирек денсаулығым туралы алаңдаймын.","Кейбір адамдар сонша биліктерін іске асырғысы келеді, олар дұрыс екенін білсем де, олар талап еткеннің кері бетін жасағым келеді.","Мен өте сирек ұрысамын.","Кейде қарғысымды айтқым келетін күшті ниет сеземін.","Кейде бірнәрсе лақтырып жіберу немесе үстелді жұдырықпен соғу ниеті туады.","Кейде бүгін жасауым керек нәрсені ертеңге қалдырамын.","Адамдардың көпшілігі ашылып қалудан қорқатындықтан ғана адал.","Менің Аллаға деген сенімім маған көмектеседі.","Менің өмірім жақсы болды деп ойлаймын.","Жастар бағынудан шыққанда, бұл оларды безендірмейді.","Кейбір адамдар билікті сонша ұнатады, олар дұрыс болса да қарсы бетін жасауым келеді.","Адамдардың көпшілігі пайда алу үшін арам пиғылмен іс-қимыл жасайды.","Кейде өтірік айтамын.","Маған қызыққандар мен өзімді қаншалықты жаман сезінетінімді білсе, қызықпас еді.","Маған шынымен зиян тигізгісі келетін жаулар жоқ деп ойлаймын.","Кейде жауапкершілік жүгімнен арылғым келеді.","Мен ешкім күтпесе де мәз бола аламын.","Мен сорлы жұлдызда туылдым.","Адамдардың арасында болғанда бөтен нәрселер естимін.","Менде ешқашан ұстама болған емес.","Менің жиі бас ауруы болады.","Аптасына бір рет немесе одан жиі мен өте қатты толқимын.","Мен сүйіспеншілік тарихтарын ықыласпен оқимын.","Адамдардың көпшілігі жүрегінде басқаларға көмектескісі келмейді.","Менің күнделікті қызығушылықтарым мен іс-шараларым алуан түрлі.","Мен сирек денсаулығым туралы алаңдаймын.","Адамдардың көпшілігі бейтаныс адамға көмектесу үшін тәуекел етпейді.","Уақыттың көп бөлігінде менің көңіл-күйім жақсы.","Менің еркек емес, қыз болып туылғаным жақсы болар еді деп ойлаймын (ерлер үшін) / керісінше (әйелдер үшін).","Кейде мен жеңе алмайтын қиыншылықтар жинақталып қалды деген сезім туады.","Кейде басқалар сезбейтін иісті сезінемін немесе көрмейтін нәрсені көремін.","Мен әрқашан дұрыс іс жасаймын.","Балалық шағымда мен дерзкі едім.","Мен жаңа адамдармен танысқанды ұнатамын.","Адамдардың көпшілігі мақсаттарына жету үшін өтірік айтуға қабілетті деп ойлаймын.","Бәрі жақсы болса да, кейде бәрі бекер деп ойлайтыным болады.","Адамдар маған бірнәрсе айтып, мен сенбесем, олар туралы не ойлайтынымды айта аламын.","Ойымды бір нәрсеге шоғырландыру қиын.","Кейде мінез-құлқым дұрыс болмайды.","Кейде балалар тәрбиесі туралы ата-анамен ойым қайшы келеді.","Маған пайдаланып жүрген адамдарға қызығатындай негіздер бар деп сеземін.","Әдетте өзімді жаман сезінбеймін.","Кейде газет оқығанда, олар маған жеке нәрсені меңзейді деп ойлаймын.","Адамдардың көпшілігі адал емес.","Адамдардың көпшілігі тиімді болғанда өтірік айтады деп ойлаймын.","Жақын достарымнан біреу мені іздесе ұнайды.","Дауыстарды қайдан шыққанын білмей естідім.","Менің сотталған адам екенімді сеземін.","Мен не ойлап, не сезінетінімді басқалар байқайды деп ойлаймын.","Ешкім мені түсінбейді деп сеземін.","Кейде өзім ешнәрсеге тұрмаймын деп ойлаймын.","Аптасына бірнеше рет бірдеңе болады деген сезім туады.","Кейде мен жасап жатқан нәрсе менің ісім емес деп сеземін.","Өмір маған қатыгез қарайды деп сенемін.","Ойымды айту қиын.","Кейде маған обсессиялық ойлар келеді.","Адамдар маған әділетсіз қарайды деп сеземін.","Кейде сөздерді айқын естимін, бұл мені қорқытады.","Мен сирек шаршаймын.","Балалық шағымда ешқашан бөтеннің нәрсесін алған емеспін.","Басқалардың маменнен жақсырақ орындайтынына ашуланамын.","Кейде өмір сүруді тоқтатқым келеді деп ойлаймын.","Мені таныс адамдарым сыйламайды деп ойлаймын.","Мен дерлік үнемі бір нәрсе немесе біреу туралы алаңдаймын.","Мен ешқашан өтірік айтқан емеспін.","Мен қиын ұйықтаймын.","Бірнәрсе жасауға тырысқанда қолдарым жиі дірілдейтінін байқаймын.","Кейде өзіме зиян тигізу туралы ойлар болады.","Жалғыз қалсам қорқамын.","Кейде шешім қабылдау маған қиын деп сеземін.","Өмірімнің көп бөлігі сәтсіздіктермен өтті.","Мен ешқашан жасаған нәрселеріме өкінбеймін.","Менің өмірімде бірнеше өте нашар кезең болды.","Мен басқа адамдарды менімен таныстыруы қиын.","Мен назар аудара жұмыс жасауды талап ететін іс-шараларды ұнатамын.","Кейде ойларым айта алмаймын деп ойлаймын.","Жиі өзімде шиеленіс пен алаңдаушылықты байқаймын.","Мен сырлар сақтай алмаймын.","Жаңа тұрғылықты жерге бейімделу маған өте қиын.","Кейде себепсіз ашуланамын.","Менде жиі қатты мазасыздық ұстамалары болады.","Маған кейде шошыған сияқты көрінесің деп айтты.","Жұмысқа шоғырлану маған оңай.","Қандай да бір сынақ тапсыруым керек болса, мен алаңдаймын.","Мен күннің көп бөлігінде жұмыспен болам.","Кейде денсаулығым туралы алаңдаймын.","Денемде жиі жағымсыз нәрсені байқаймын.","Кейде бәрі маған қарсы деп ойлаймын.","Кейде өзіммен мақтанамын.","Мен оңай ұялдым.","Білетінімнің көпшілігін мектепте алмадым.","Кейбір ойлар мені алаңдатады.","Кейде үйден кетіп қалғым келеді.","Адамдардың арасында болсам да жалғыз сеземін.","Адамдармен бірге болғанды ұнатамын.","Кейде бір іс туралы ойлағанда, бірнәрсе мені тоқтатады.","Ойларымды сөзбен жеткізу қиын.","Адамдардан тез шаршаймын.","Кейде ойларымды сыртта естимін деп сеземін.","Менде жиі кеудемде ауырлық сезімі болады.","Мен оңай толқимын.","Мені жиі негізсіз сынайды.","Қарама-қарсы жыныстағы адамдардың назарын аудартатынымды сенемін.","Мен әрқашан шынды айтпаймын.","Саясатпен айналысқанды ұнатамын.","Биіктен төмен қарағанда қорқамын.","Кейде өзімді қажетсіз сеземін.","Уақытымды жоспарлай алмаймын.","Менде бет-жүздерге жақсы жады бар.","Сөйлесіп жатқанда үзілсем ашуланамын.","Денсаулығыма іс жүзінде мән бермеймін.","Үйден кеткен кезде үйге сағынамын.","Кейде адамдар менің артымнан сөйлейді деп ойлаймын.","Бейтаныс адамдардан қорқпаймын.","Мен маған айтылғанның бәрін жасаймын.","Кейбір тағамдардың иісін нашар көтеремін.","Адамдармен бірге болуды ұнатамын деп ойлаймын.","Ұсақ-түйек нәрселерден жиі ренжімін.","Кейде артымнан біреу қарап тұрғандай сезімім болады.","Кейде сөйлесудің жіпсізін жоғалтып алдым деп сеземін.","Таңертен жиі нашар көңіл-күйде боламын.","Мен тым көп алаңдаймын деп сеземін.","Маған жиі кошмарлар түседі.","Мен оңай ортақ тіл табамын.","Жаңа іс бастауға энергиям жетпейді.","Жиі бәрі жақсырақ болуы мүмкін еді деп ойлаймын.","Жетекшілермен жұмыс жасау маған қиын.","Маған кейде тым көп сөйлейсің деп айтты.","Ғылыми мақалалар оқығанды ұнатамын.","Кейде өмір тұрарлық емес деп ойлаймын.","Ақырғы шешімдер қабылдау маған қиын.","Біреу маған зиян тигізгісі келеді деп ойлаймын.","Жиі алдыңғы күні неліктен алаңдағанымды түсіне алмаймын.","Бейтаныс адаммен сөйлесуді жалғастыру маған қиын.","Мен оңай алаңдаймын.","Адамдар жыныс туралы тым көп сөйлейді деп ойлаймын.","Кейде өзіммен өзім сөйлесіп жатырмын деп сеземін.","Кейде себепсіз өте шаршаймын.","Кейбір ойларымды мойындауға ұялатыным бар.","Бірнәрсені күту кезінде алаңдаушылық сеземін.","Менде өте толқыған кезеңдер болды.","Адамдарға оңай шыдамым таусылады.","Маған жиі келіспейтін бұйрықтарды орындауға тура келді.","Мен ешкімге дұшпандық сезбеймін.","Кейде ойларымды бақылай алмаймын деп сеземін.","Мен маңызды тақырыптардағы дәрістерге ықыласпен барамын.","Қиын тапсырмаларды шешкенді ұнатамын.","Мен жалғыз сеземін.","Жиі себепсіз ашуланатынымды байқаймын.","Мен оңай тұйыққа тіреліп қаламын.","Кейде өз-өзіме қол жұмсау туралы ойлаймын.","Аз таниятын адамдармен болу маған қиын.","Шоғырлану кейде маған қиын.","Кейде өзімнен бақылауды жоғалтып жатырмын деп сеземін.","Ашуымды жасыру маған қиын.","Менің жүйкем керілген ішектей.","Жиі бұлшықеттерімде шиеленіс сеземін.","Менде жиі ешнәрсе жасағым келмейтін кезеңдер болады.","Менде ерекше қорқыныштар жоқ.","Шоғырлануды талап ететін нәрселермен айналысқанды ұнатамын.","Мен оңай шаршаймын.","Кейде алдымдағы жартастың шетінде тұрмын деген сезімім туады.","Жиі өткен қателіктерім туралы ойлаймын.","Кейде адамдар маған сынмен қарайды деп ойлаймын.","Мен қараңғыдан қорықпаймын.","Кейде күлу немесе жылау ұстамалары болады.","Назар аудару нысанасы болғанды ұнатпаймын.","Кейде кейін өкінетін іс-қимылдар жасаймын.","Топта болғанда ыңғайсыз сеземін.","Кейде менде ерекше мәз болатын кезеңдер болады.","Кейде өзім бос деп сеземін.","Адамдар әрқашан адал емес деп ойлаймын.","Кейде бірнәрсе дұрыс емес немесе жаман жасадым деп сеземін.","Менде ерекше жігер сезінген кезеңдер болды.","Жарыстарға қатысқанды ұнатамын.","Мен жиі болашақ туралы ойлаймын.","Кейде мен қара пішіндемін.","Адамдардың көзіне тік қарау маған қиын.","Кейде адамдар мені пайдаланғысы келеді деп ойлаймын.","Мен жаңа идеялармен танысуды ұнатамын.","Кейде шешім қабылдап, кейін өкінемін.","Жаңа жағдайларда мазасыздық сеземін.","Мен әдетте шешімдерді жылдам қабылдаймын.","Қоғамдық өмірдің орталығында болғанды ұнатамын.","Кейде болуы мүмкін жағымсыз нәрселер туралы ойлаймын.","Жоқ деп айту маған қиын.","Жиі өзімді кінәлі сеземін.","Кейде несіне болса маған несіп тигізбейді деп сеземін.","Мәз адамдармен бірге болғанды ұнатамын.","Мені ешкім жақсы көрмейді деп сенемін.","Кейде айналамдағының бәрі нақты емес деген сезімім туады.","Ұсақ-түйек нәрселерден оңай ренжимін.","Басқаларға көмектескенді ұнатамын.","Кейде не болып жатқаны нақты емес деген сезімім туады.","Мені дұрыс түсінеді деп ойлаймын.","Жалғыз жұмыс жасағанды ұнатамын.","Кейде айналасындағыларға ашуланамын.","Кейде болашағым жоқ деп сеземін.","Уақытымды жоспарлаудыұнатамын.","Басқаларды оңай кешіремін.","Кейде өмір тоқтап қалды деген сезімім туады.","Қарым-қатынаста қиыншылық сезбеймін.","Кейде тұйыққа тіреліп қалдым деп сеземін.","Дене еңбегімен айналысқанды ұнатамын.","Кейде бәрі дұрыс емес деп сеземін.","Мен сирек зеригемін.","Отбасым туралы жиі ойлаймын.","Адамдарды бақылауды ұнатамын.","Кейде іштен бос сезінемін.","Маған жиі жанды және айқын түс түседі.","Адамдарды жақсы түсінемін деп ойлаймын.","Ойланудан гөрі іс-қимыл жасасам жақсы сеземін.","Кейде себепсіз толқып кетемін.","Шытырман оқиғалы кітаптарды оқуды ұнатамын.","Шешім қабылдауда қиыншылықтар сезбеймін.","Кейде өмір маған әділетсіз деген сезімім туады.","Зияткерлік іс-шараларымен айналысқанды ұнатамын.","Кейде жаман нәрселер туралы ойлаймын.","Мен жаңа жағдайларға оңай бейімделемін.","Менде себепсіз қуаныш кезеңдері болады.","Кейде анық ойлай алмаймын деген сезімім туады.","Белгілі адамдардың өмірбаянын оқуды ұнатамын.","Жиі керек болғаннан артық алаңдайтынымды байқаймын.","Бейтаныс адамдармен сөйлесуді бастау маған қиын.","Кейде қиыншылықтарды жеңе алмаймын деп сеземін.","Ситуациялардың көпшілігінде өзіме сенімдімін.","Кейде бірнәрсені бұзып жіберу ниеті туады.","Адамдармен жұмыс жасауды ұнатамын.","Кейде өмірімде ештеңені өзгерте алмаймын деп ойлаймын.","Қиын жағдайлардан шығуды оңай табамын.","Кейде ақылымды жоғалтып аламын деп қорқамын.","Іс-қимылдарымды алдын-ала жоспарлауды ұнатамын.","Кейде себепсіз мазасыздық сеземін.","Ұйықтауда қиыншылық сезбеймін.","Кейде нақты емес әлемде тұрмын деген сезімім туады.","Өмірдің мағынасы туралы ойлаудыұнатамын.","Кейде ұялататын ойларым болады.","Жаңа адамдармен байланыс орнату маған оңай.","Кейде күшім жоқ деп сеземін.","Логикалық есептерді шешкенді ұнатамын.","Кейде ойларымды бақылауды жоғалтып жатырмын деген сезімім туады.","Мен жақсы шоғырлана аламын.","Кейде ешнәрсе маған қуаныш бермейді деп сеземін.","Шығармашылық іс-шараларымен айналысқанды ұнатамын.","Кейде менде депрессиялық кезеңдер болады.","Болашақтан қорықпаймын.","Кейде өлгенім жақсы болар еді деп ойлаймын.","Адамдарға проблемаларын шешуге көмектескенді ұнатамын.","Кейде айналадағы дүние маған дұшпандық деп сеземін.","Ситуациялардың көпшілігінде тыныш сеземін.","Кейде бақылай алмайтын ойлар туады.","Адамдарды ұйымдастыруды ұнатамын.","Кейде өзімнен-өзімді жоғалтып жатырмын деп сеземін.","Стрессті жақсы басқарамын.","Кейде ешкімге керек емеспін деп ойлаймын.","Топтық іс-шараларға қатысқанды ұнатамын.","Кейде өмірдің мағынасы жоқ деген сезімім туады.","Мен сирек ашуланамын.","Кейде тым көп ойлаймын деп сеземін.","Жақсы іс жасауды ұнатамын.","Кейде өзімнің нақтылығы жоғалып жатыр деген сезімім туады.","Кедергілерді оңай жеңемін.","Кейде өз өмірімді емес деп сеземін.","Жаңа идеяларды зерттеуді ұнатамын.","Кейде жеңілмейтін шаршаушылық сеземін.","Өз күшіме сенімдімін.","Кейде бәрге немқұрайлылық сезімі туады.","Оқиғалардың орталығында болғанды ұнатамын.","Кейде сәйкестік сезімімді жоғалтып жатырмын деп сеземін.","Сынаудан қорықпаймын.","Кейде ойларым маған тиісті емес деп сеземін.","Спортпен айналысқанды ұнатамын.","Кейде айналамдағының бәрі сұр және мәнсіз деп сеземін.","Пікірімді жақсы қорғай аламын.","Кейде зорлық туралы ойлар болады.","Басқаларға пайдалы болуды ұнатамын.","Кейде нақтылық қолымнан шығып кетіп жатыр деген сезімім туады.","Сезімдерімді білдіруде қиыншылық сезбеймін.","Кейде денемнен тыс тұрмын деп сеземін.","Күрделі нәрселер туралы ойлаудыұнатамын.","Кейде бірдеңе ұрып-соқтым деп ойлаймын.","Компромисс табуды оңай табамын.","Кейде менде жоқпын деп сеземін.","Бастамашылық танытуды талап ететін іс-шараларымен айналысқанды ұнатамын.","Кейде болашағым жоқ деп сеземін.","Адамдармен қарым-қатынаста қиыншылық сезбеймін.","Кейде айналадағы дүние өзгерді деп сеземін.","Басқа адамдарға көмектескенді ұнатамын.","Кейде уақыттың баяулауы сезімі туады.","Кез-келген тақырыпта сөйлесуді жалғастыра аламын.","Кейде лайықты өмірге тұрмаймын деп ойлаймын.","Дәлдікті талап ететін іс-шараларымен айналысқанды ұнатамын.","Кейде баяу қозғалып жатырмын деп сеземін.","Ойларымды білдіруде қиыншылық сезбеймін.","Кейде біреу ойларымды басқарады деп сеземін.","Болашақ туралы ойлануды ұнатамын.","Кейде параллель дүниеде тұрмын деген сезімім туады.","Кез-келген жағдайдан шығуды оңай табамын.","Кейде өзімді жоғалттым деп ойлаймын.","Идеяларымды басқалармен бөліскенді ұнатамын.","Кейде тұлға ыдырауы сезімі туады.","Кез-келген тапсырмамен күресемін деп сенемін.","Кейде өмірдің мағынасын жоғалттым деп сеземін.","Белсенді өмірді ұнатамын.","Кейде өзімнен алшақтау сезімі туады.","Қиыншылықтардан қорықпаймын.","Кейде өмір мағынасыз болды деп сеземін.","Жақындарыма көмектескенді ұнатамын.","Кейде толық бос қалу сезімі туады."];
+
+const SCALES={L:{name:'L — Өтірік',items:[15,30,45,60,75,90,105,120,135,150,165,180,195,210,225]},F:{name:'F — Сенімділік',items:[14,23,27,31,33,35,40,42,48,49,50,53,56,66,84,85,87,93,102,108,134,197,200,202,205,206,209,210,211,215]},K:{name:'K — Түзету',items:[30,39,71,89,100,129,134,153,183,217]},Hs:{name:'1 — Ипохондрия',items:[23,29,43,62,72,108,114,125,161,189,191,217,230,234,236,238,241,244,245,252]},D:{name:'2 — Депрессия',items:[5,13,23,30,35,37,43,52,57,58,64,65,73,74,84,87,89,95,98,101,102,104,106,107,108,109,110,129]},Hy:{name:'3 — Истерия',items:[10,23,32,44,47,76,114,179,186,189,193,210,224,226,228,230,232,234,236,238,241,244,245,252]},Pd:{name:'4 — Психопатия',items:[11,17,21,22,31,32,35,42,52,54,57,67,84,94,105,108,110,118,127,215]},Mf:{name:'5 — Ерл./Әйел.',items:[4,25,62,67,74,80,112,119,122,128,137,166,177,187,203,204,217,222,223,229,231,239,261,278,282]},Pa:{name:'6 — Паранойя',items:[15,16,22,24,27,35,110,121,123,127,151,157,158,202,275,284,285,286,305]},Pt:{name:'7 — Психастения',items:[10,15,22,32,39,56,65,86,89,94,106,129,138,142,148,165,196,217,238,266,301,304,305,317,321,336,337,340,342,343,344,346,349,351,352,356,357,361,362,363,364,365,366]},Sc:{name:'8 — Шизофрения',items:[15,16,21,22,24,32,33,35,38,40,41,47,52,76,97,104,121,156,157,159,163,168,179,182,190,197,200,202,210,211,212,215,251,254,269,272,275,278,284,285,286,291,295,296,298,299,303,305,307,312,320,324,326,327,328,329,330]},Ma:{name:'9 — Гипомания',items:[11,13,21,22,59,64,73,97,100,109,127,134,143,156,157,167,181,194,212,222,226,228,232,233,238,240,242,244,248,250,251,253,269]},Si:{name:'0 — Соц. интроверсия',items:[25,32,49,52,57,67,82,111,117,124,128,147,171,172,180,201,267,278,292,304,316,321,332,336,342,357,363,370]}};
+const MEANS={L:4,F:6,K:15,Hs:5,D:18,Hy:21,Pd:10,Mf:25,Pa:8,Pt:12,Sc:13,Ma:19,Si:25};
+const SDS={L:3,F:4,K:5,Hs:4,D:8,Hy:6,Pd:5,Mf:5,Pa:5,Pt:7,Sc:8,Ma:5,Si:10};
+const DESC={Hs:'Денсаулыққа шамадан тыс алаңдау, соматикалық шағымдар, эгоцентризм.',D:'Көңіл-күйдің төмендеуі, пессимизм, тежелу, өзін-өзі бағалаудың төмендеуі.',Hy:'Демонстративтілік, мазасыздықты соматикаға ауыстыру, мақұлдауға тәуелділік.',Pd:'Импульсивтілік, жанжалшылдық, әлеуметтік нормаларды сыйламау.',Mf:'Маскулиндік немесе фемининдік белгілердің көрінуі, эстетикалық қызығушылықтар.',Pa:'Күдікшілдік, аффекттің қатаңдығы, асыра бағалаған идеяларға бейімділік.',Pt:'Мазасыздық, обсессиялық ойлар, ұсақ, өзін-өзі сынау.',Sc:'Ойлау бұзылыстары, аутизм, қабылдаудың ерекшелігі, деперсонализация.',Ma:'Белсенділіктің артуы, ойлаудың жеделдеуі, эйфория, сынқорлықтың төмендеуі.',Si:'Жабықтық, әлеуметтік байланыстардан қашу, ұялшақтық.'};
+
+const SKEY='mmil_kz_v1';
+let cur=0,ans=[],patient={};
+
+function fmtDate(d){if(!d)return'';try{const[y,m,dd]=d.split('-');return`${dd}.${m}.${y}`;}catch(e){return d;}}
+
+function load(){
+  try{const s=localStorage.getItem(SKEY);if(s){const d=JSON.parse(s);ans=d.ans||[];cur=d.cur||0;patient=d.patient||{};}}catch(e){}
+  if(!ans.length)ans=new Array(ITEMS.length).fill(null);
+  if(patient.name)document.getElementById('f-name').value=patient.name;
+  if(patient.dob)document.getElementById('f-dob').value=patient.dob;
+  if(patient.sex)document.getElementById('f-sex').value=patient.sex;
+  if(patient.date)document.getElementById('f-date').value=patient.date;
+  if(patient.psych)document.getElementById('f-psych').value=patient.psych;
+  if(patient.phone)document.getElementById('f-phone').value=patient.phone;
+}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify({ans,cur,patient}));}catch(e){}}
+function showView(v){['intro','test','results'].forEach(id=>document.getElementById('view-'+id).classList.remove('active'));document.getElementById('view-'+v).classList.add('active');}
+
+function patientBar(){
+  const parts=[];
+  if(patient.name)parts.push(`<span class="patient-chip">👤 <strong>${patient.name}</strong></span>`);
+  if(patient.dob)parts.push(`<span class="patient-chip">Т.к.: <strong>${fmtDate(patient.dob)}</strong></span>`);
+  if(patient.sex)parts.push(`<span class="patient-chip">Жынысы: <strong>${patient.sex}</strong></span>`);
+  if(patient.date)parts.push(`<span class="patient-chip">📅 <strong>${fmtDate(patient.date)}</strong></span>`);
+  if(patient.psych)parts.push(`<span class="patient-chip">🩺 <strong>${patient.psych}</strong></span>`);
+  if(patient.phone)parts.push(`<span class="patient-chip">📞 <strong>${patient.phone}</strong></span>`);
+  return parts.join('');
+}
+
+function clearErr(){
+  ['f-name','f-dob','f-sex','f-date','f-psych'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('err');});
+  ['err-name','err-dob','err-sex','err-date','err-psych'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('show');});
+  const fe=document.getElementById('form-error');if(fe)fe.classList.remove('show');
+}
+
+function startTest(){
+  clearErr();
+  const vals={
+    name:document.getElementById('f-name').value.trim(),
+    dob:document.getElementById('f-dob').value,
+    sex:document.getElementById('f-sex').value,
+    date:document.getElementById('f-date').value,
+    psych:document.getElementById('f-psych').value.trim(),
+    phone:document.getElementById('f-phone').value.trim()
+  };
+  const required=[
+    {id:'f-name',err:'err-name',val:vals.name},
+    {id:'f-dob',err:'err-dob',val:vals.dob},
+    {id:'f-sex',err:'err-sex',val:vals.sex},
+    {id:'f-date',err:'err-date',val:vals.date},
+    {id:'f-psych',err:'err-psych',val:vals.psych}
+  ];
+  let hasErr=false;
+  required.forEach(r=>{
+    if(!r.val){document.getElementById(r.id).classList.add('err');document.getElementById(r.err).classList.add('show');hasErr=true;}
+  });
+  if(hasErr){document.getElementById('form-error').classList.add('show');document.getElementById('f-name').scrollIntoView({behavior:'smooth',block:'center'});return;}
+  patient=vals;
+  save();
+  const bar=patientBar();
+  const pb=document.getElementById('patient-bar-test');
+  if(bar){pb.innerHTML=bar;pb.style.display='flex';}
+  showView('test');renderQ();
+}
+
+function renderQ(){
+  const answered=ans.filter(a=>a!==null).length;
+  const pct=Math.round(answered/ITEMS.length*100);
+  document.getElementById('prog-lbl').textContent=`${cur+1}-сұрақ / ${ITEMS.length}`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('hdr-meta').textContent=`Жауап берілді: ${answered} / ${ITEMS.length}`;
+  document.getElementById('q-num').textContent=`#${cur+1}`;
+  document.getElementById('q-text').textContent=ITEMS[cur];
+  document.getElementById('q-skip-badge').style.display=ans[cur]===null?'inline':'none';
+  document.getElementById('btn-v').className='btn-ans'+(ans[cur]===true?' sel-v':'');
+  document.getElementById('btn-n').className='btn-ans'+(ans[cur]===false?' sel-n':'');
+  document.getElementById('btn-back').disabled=cur===0;
+  save();
+}
+
+function answer(val){ans[cur]=val;renderQ();if(cur<ITEMS.length-1)setTimeout(()=>{cur++;renderQ();},140);}
+function navQ(d){cur=Math.max(0,Math.min(ITEMS.length-1,cur+d));renderQ();}
+
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('view-test').classList.contains('active'))return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')navQ(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')navQ(-1);
+  if(e.key==='1')answer(true);if(e.key==='2')answer(false);
+});
+
+function calcRaw(id){return SCALES[id].items.filter(i=>i<=ITEMS.length&&ans[i-1]===true).length;}
+function toT(id,raw){return Math.round(50+10*(raw-(MEANS[id]||10))/(SDS[id]||5));}
+
+function showResults(){
+  showView('results');
+  const bar=patientBar();
+  const pr=document.getElementById('patient-bar-res');
+  if(bar){pr.innerHTML=bar;pr.style.display='flex';}
+  const meta=[];
+  if(patient.name)meta.push(`Аты-жөні: ${patient.name}`);
+  if(patient.dob)meta.push(`Туған күні: ${fmtDate(patient.dob)}`);
+  if(patient.sex)meta.push(`Жынысы: ${patient.sex}`);
+  if(patient.date)meta.push(`Тексеру күні: ${fmtDate(patient.date)}`);
+  if(patient.psych)meta.push(`Психолог: ${patient.psych}`);
+  if(patient.phone)meta.push(`Телефон: ${patient.phone}`);
+  document.getElementById('print-meta').innerHTML=meta.map(m=>`<span>${m}</span>`).join(' &nbsp;·&nbsp; ');
+  buildProfile();buildInterp();buildGrid();
+}
+
+function buildBars(ids,cid){
+  const el=document.getElementById(cid);el.innerHTML='';
+  ids.forEach(id=>{
+    const raw=calcRaw(id),t=toT(id,raw);
+    const pct=Math.min(100,Math.max(2,(t/130)*100));
+    const col=t>=70?'#C62828':t>=60?'#E65100':t>=40?'#7C4DFF':'#9575CD';
+    el.innerHTML+=`<div class="scale-row"><div class="scale-name">${SCALES[id].name}</div><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div><div class="scale-t" style="color:${col}">${t}</div></div>`;
+  });
+}
+function buildProfile(){buildBars(['L','F','K'],'bars-validity');buildBars(['Hs','D','Hy','Pd','Mf','Pa','Pt','Sc','Ma','Si'],'bars-clinical');}
+
+function buildInterp(){
+  const el=document.getElementById('interp-list');el.innerHTML='';
+  ['Hs','D','Hy','Pd','Mf','Pa','Pt','Sc','Ma','Si'].forEach(id=>{
+    const raw=calcRaw(id),t=toT(id,raw);
+    let col,label;
+    if(t>=70){col='#C62828';label='≥70';}else if(t>=60){col='#E65100';label='60–69';}else if(t>=40){col='#7C4DFF';label='40–59';}else{col='#9575CD';label='<40';}
+    el.innerHTML+=`<div class="interp-item"><div class="interp-t" style="color:${col}">${t}</div><div class="interp-body"><div class="iname">${SCALES[id].name}<span class="badge" style="background:${col}22;color:${col}">${label}</span></div><div class="idesc">${DESC[id]}</div></div></div>`;
+  });
+}
+
+function buildGrid(){
+  const el=document.getElementById('ans-grid');el.innerHTML='';
+  ans.forEach((a,i)=>{
+    const cls=a===true?'av':a===false?'an':'ask';
+    el.innerHTML+=`<div class="ans-cell ${cls}" onclick="jumpTo(${i})"><div class="cnum">${i+1}</div><div class="cval">${a===true?'И':a===false?'Ж':'—'}</div></div>`;
+  });
+}
+
+function jumpTo(i){cur=i;showView('test');renderQ();}
+function goBack(){showView('test');renderQ();}
+function switchTab(name,btn){
+  ['profile','interp','answers'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===name?'block':'none';});
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+function resetTest(){
+  if(!confirm('Барлық жауаптарды өшіріп, қайтадан бастайсыз ба?'))return;
+  ans=new Array(ITEMS.length).fill(null);cur=0;patient={};
+  ['f-name','f-dob','f-sex','f-date','f-psych','f-phone'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  save();showView('intro');
+  document.getElementById('hdr-meta').textContent='370 пікір · 13 шкала';
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const t=new Date();
+  const today=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  document.getElementById('f-date').value=today;
+  load();
+  if(ans.filter(a=>a!==null).length>0){
+    const bar=patientBar();
+    const pb=document.getElementById('patient-bar-test');
+    if(bar){pb.innerHTML=bar;pb.style.display='flex';}
+    showView('test');renderQ();
+  } else {
+    showView('intro');
+  }
+});
+</script>
+</body>
+</html>
